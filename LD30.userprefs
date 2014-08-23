@@ -1,0 +1,20 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/GameStages.cs">
+    <Files>
+      <File FileName="Assets/CameraClick.cs" Line="37" Column="19" />
+      <File FileName="Assets/GameStages.cs" Line="26" Column="29" />
+      <File FileName="Assets/GameState.cs" Line="40" Column="56" />
+      <File FileName="Assets/ConnectableObject.cs" Line="134" Column="43" />
+      <File FileName="Assets/ConObj.cs" Line="36" Column="28" />
+      <File FileName="Assets/CameraGUI.cs" Line="31" Column="3" />
+      <File FileName="Assets/ConResources.cs" Line="36" Column="32" />
+      <File FileName="Assets/BadEnding.cs" Line="7" Column="169" />
+      <File FileName="Assets/GoodEnd.cs" Line="9" Column="3" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
