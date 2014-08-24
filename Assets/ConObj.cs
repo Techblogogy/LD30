@@ -1,3 +1,15 @@
+/*
+* |===============================|
+* |								  |
+* |		COPYRIGHT				  |
+* |		TECHBLOGOGY	2014		  |
+* | 							  |
+* |								  |
+* |===============================|
+* 
+* 	WERY BAD CODE. USE ONLY AT YOUR OWN RISK. ALTHOUGHT I'D RECOMEND NOT USING IT
+*/
+
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,8 +31,10 @@ public class ConObj
 
 	public float minDist;
 	public float maxDist;
+
+	private int ammount;
 	
-	public ConObj(GameObject go, string prefabPath, float spawnTime, float minDist, float maxDist)
+	public ConObj(GameObject go, string prefabPath, float spawnTime, float minDist, float maxDist, int ammount)
 	{
 		parentGo = go;
 
@@ -34,11 +48,15 @@ public class ConObj
 		cr = parentGo.AddComponent<ConResources>();
 		cr.co = this;
 		cr.spawnTime = spawnTime;
+		cr.objName = this.parentGo.name;
 
 		this.minDist = minDist;
 		this.maxDist = maxDist;
-	}
 
+		this.ammount = ammount;
+		cr.ammount = ammount;
+	}
+	
 	public void CreateConnectableObject(Vector3 pos)
 	{
 		GameObject conObj = (GameObject)MonoBehaviour.Instantiate(objectPrefab, Vector3.zero, Quaternion.identity);
@@ -66,5 +84,7 @@ public class ConObj
 		}
 
 		Camera.main.GetComponents<AudioSource>()[1].Play();
+
+		Debug.Log(minDist+" "+maxDist);
 	}	
 }

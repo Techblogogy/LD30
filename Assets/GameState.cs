@@ -1,3 +1,15 @@
+/*
+* |===============================|
+* |								  |
+* |		COPYRIGHT				  |
+* |		TECHBLOGOGY	2014		  |
+* | 							  |
+* |								  |
+* |===============================|
+* 
+* 	WERY BAD CODE. USE ONLY AT YOUR OWN RISK. ALTHOUGHT I'D RECOMEND NOT USING IT
+*/
+
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,11 +28,16 @@ public class GameState
 	private AudioClip ac;
 	private string clipPath;
 
+	private AudioClip vs;
+	private string vsPath;
+
 	private float minDist;
 	private float maxDist;
 	private float spawnTime;
 
-	public GameState(string objName, string meshPath, string clipPath, float minDist, float maxDist, float spawnTime)
+	private int ammount;
+
+	public GameState(string objName, string meshPath, string clipPath, float minDist, float maxDist, float spawnTime, int ammount, string vsPath)
 	{
 		gameStagesObj = GameObject.Find("StageMachine").GetComponent<GameStages>();
 
@@ -31,13 +48,16 @@ public class GameState
 		this.minDist = minDist;
 		this.maxDist = maxDist;
 		this.spawnTime = spawnTime;
+
+		this.ammount = ammount;
+		this.vsPath = vsPath;
 	}
 
 	public virtual void StageStart()
 	{
 		oHolder = new GameObject();
 		oHolder.name = objName;
-		oController = new ConObj(oHolder, meshPath, spawnTime, minDist, maxDist);
+		oController = new ConObj(oHolder, meshPath, spawnTime, minDist, maxDist, ammount);
 
 		//allowFadeIn = true;
 
@@ -45,6 +65,11 @@ public class GameState
 		Camera.main.GetComponents<AudioSource>()[0].volume = 0;
 		Camera.main.GetComponents<AudioSource>()[0].clip = ac;
 		Camera.main.GetComponents<AudioSource>()[0].Play();
+
+		vs = Resources.Load<AudioClip>(vsPath);
+		Camera.main.GetComponents<AudioSource>()[3].volume = 1;
+		Camera.main.GetComponents<AudioSource>()[3].clip = vs;
+		Camera.main.GetComponents<AudioSource>()[3].Play();
 
 	}
 
@@ -80,7 +105,7 @@ public class GameState
 	private Vector3 transformDirection = Vector3.zero;
 	protected void FadeOutAndSwitch()
 	{
-		if (oController.objList.Count >= 5)
+		if (oController.objList.Count >= ammount)
 		{
 			alpha -= Time.deltaTime * 0.5f;
 			

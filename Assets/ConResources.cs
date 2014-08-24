@@ -1,3 +1,15 @@
+/*
+* |===============================|
+* |								  |
+* |		COPYRIGHT				  |
+* |		TECHBLOGOGY	2014		  |
+* | 							  |
+* |								  |
+* |===============================|
+* 
+* 	WERY BAD CODE. USE ONLY AT YOUR OWN RISK. ALTHOUGHT I'D RECOMEND NOT USING IT
+*/
+
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,9 +29,14 @@ public class ConResources:MonoBehaviour
 
 	public ConObj co;
 
+	private GUISkin gs;
+	public string objName;
+
+	public int ammount;
+
 	void Start()
 	{
-
+		gs = Resources.Load<GUISkin>("GameGUI");
 	}
 
 	void Update()
@@ -29,19 +46,21 @@ public class ConResources:MonoBehaviour
 
 	/* Mange Resources */
 	
-	private float resourceTime = 0.0f;
+	public float resourceTime;
 	private void GenerateResources()
 	{
-		resourceTime += Time.deltaTime;
-		if (resourceTime >= spawnTime)
+		resourceTime -= Time.deltaTime;
+		if (resourceTime <= 0)
 		{
 			res++;
-			SetLink(-healtDamage);
+
+			if (conList.Count > 0)
+				SetLink(-healtDamage);
 
 			if (linkHealt <= 0)
 				GameObject.Find("StageMachine").GetComponent<GameStages>().SetBadEnd();
 			
-			resourceTime = 0;
+			resourceTime = spawnTime;
 		}
 	}
 	
@@ -63,31 +82,50 @@ public class ConResources:MonoBehaviour
 		}
 	}
 
+	private Vector3 cPos = Vector3.zero;
+	private Vector3 lastPos = Vector3.zero;
+	private int lastAmp = 5;
 	void OnGUI()
 	{
-		GUI.TextArea(new Rect(0,0,100,20), "Resources: "+res);
-		GUI.TextArea(new Rect(100,0,100,20), "Healt: "+linkHealt);
+		GUI.skin = gs;
+
+		GUI.Label(new Rect(10,0,150,50), "Energy: "+res);
+		GUI.Label(new Rect(160,0,200,50), "Link Health: "+linkHealt);
+		GUI.Label(new Rect(Screen.width-150,0,150,50), "Time: "+((int)resourceTime+1));
+
+		GUI.Label(new Rect(10,Screen.height-50,400,50), objName + "s Until Upgrade: " + (ammount - co.objList.Count));
 
 		if (res > 0)
 		{
-			if ( GUI.Button(new Rect(20,20,200,20), "Add Object(-1 Resource)") )
+			if ( GUI.Button(new Rect(Screen.width-250,Screen.height-50,250,50), "Add "+objName+" (-1 Energy)") )
 			{
 				res--;
-				Vector3 randomVec = new Vector3(Random.Range(transform.position.x + 5.0f, transform.position.x - 5.0f),
+				/*cPos = co.objList[co.objList.Count-1].transform.position;
+				Vector3 randomVec = new Vector3(Random.Range(cPos.x + co.minDist, cPos.x + co.maxDist),
 				                                0,
-				                                Random.Range(transform.position.z + 5.0f, transform.position.z - 5.0f) );
+				                                Random.Range(cPos.z + co.minDist, cPos.z + co.maxDist) );*/
+
+				float radomR = Random.Range(-0.2f, 0.2f);
+				Vector3 randomVec = new Vector3(5 * Mathf.Sin(radomR * (2*Mathf.PI)) + lastPos.x,
+				                                0,
+				                                5 * Mathf.Cos(radomR * (2*Mathf.PI)) + lastPos.z );
 
 
 				co.CreateConnectableObject(randomVec);
+
+				Debug.Log(randomVec +" "+lastPos);
+
+				lastAmp+=5;
+				lastPos = randomVec;
 			}
 		}
 
 		if (res > 0 && linkHealt < 100 && conList.Count > 0)
 		{
-			if (GUI.Button(new Rect(20,40,200,20), "Heal Link (-1 Resource)"))
+			if (GUI.Button(new Rect(Screen.width-250,Screen.height-100,250,50), "Heal Link (-1 Energy)"))
 			{
 				SetLink(healtDamage);
-				Camera.main.GetComponents<AudioSource>()[2].Play();
+				Camera.main.GetComponents<AudioSource>()[1].Play();
 			}
 		}
 	}

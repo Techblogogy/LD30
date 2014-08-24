@@ -1,10 +1,22 @@
+/*
+* |===============================|
+* |								  |
+* |		COPYRIGHT				  |
+* |		TECHBLOGOGY	2014		  |
+* | 							  |
+* |								  |
+* |===============================|
+* 
+* 	WERY BAD CODE. USE ONLY AT YOUR OWN RISK. ALTHOUGHT I'D RECOMEND NOT USING IT
+*/
+
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
 public class BadEnding:GameState
 {
-	public BadEnding(string objName, string meshP, string clipPath, float minDist, float maxDist, float spawnTime) : base(objName,meshP,clipPath,minDist,maxDist,spawnTime)
+	public BadEnding() : base(null,null,null,0,0,0,0,null)
 	{
 
 	}
@@ -14,6 +26,7 @@ public class BadEnding:GameState
 		//base.StageStart ();
 
 		CameraGUI.setBadEnd = true;
+		Camera.main.GetComponents<AudioSource>()[2].Play();
 	}
 
 	public override void StageUpdate ()

@@ -1,3 +1,15 @@
+/*
+* |===============================|
+* |								  |
+* |		COPYRIGHT				  |
+* |		TECHBLOGOGY	2014		  |
+* | 							  |
+* |								  |
+* |===============================|
+* 
+* 	WERY BAD CODE. USE ONLY AT YOUR OWN RISK. ALTHOUGHT I'D RECOMEND NOT USING IT
+*/
+
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,7 +17,7 @@ using System.Collections.Generic;
 public class ConnectableObject:MonoBehaviour
 {
 	public ConObj controller;
-	private ConResources cr;
+	public ConResources cr;
 
 	void OnCollisionEnter(Collision col)
 	{
@@ -15,7 +27,6 @@ public class ConnectableObject:MonoBehaviour
 	void Start()
 	{
 		LoadPrefab();
-
 		cr = controller.objectParent.GetComponent<ConResources>();
 	}
 	
@@ -25,6 +36,17 @@ public class ConnectableObject:MonoBehaviour
 
 		ConnectableObjectHop();
 		//SpawnConnectableObject();
+
+		//Rotate();
+	}
+
+	private void Rotate()
+	{
+		Vector3 randomVec = new Vector3((2) * Mathf.Sin(Time.time * (2*Mathf.PI)) +10,
+		                                0,
+		                                (2) * Mathf.Cos(Time.time * (2*Mathf.PI)) +10 );
+
+		this.transform.position = randomVec;
 	}
 	
 	/* Connectable Obj Connectivity */
@@ -67,11 +89,12 @@ public class ConnectableObject:MonoBehaviour
 		cylPrefab = Resources.Load<GameObject>(cylPath);
 	}
 
+
 	public void DrawConnection(GameObject atomP)
 	{
-		Vector3 offset = atomP.transform.position - this.transform.position;
+		Vector3 offset = (atomP.transform.position) - (this.transform.position);
 		Vector3 scale = new Vector3(CYL_SCALE, offset.magnitude / 2.0f, CYL_SCALE);
-		Vector3 position = this.transform.position + (offset /2.0f);
+		Vector3 position = (this.transform.position) + (offset /2.0f);
 		
 		cyl = (GameObject)Instantiate(cylPrefab, position, Quaternion.identity);
 		cyl.transform.up = offset;
@@ -88,15 +111,18 @@ public class ConnectableObject:MonoBehaviour
 	
 	private float yInd = 0.0f;
 	private Vector3 yVec;
+	private Vector3 rotVec = new Vector3(0, Random.value, Random.value);
 	private void ConnectableObjectHop()
 	{
-		yInd = 0.05f * Mathf.Sin(Time.time * Mathf.PI);
+		/*yInd = 0.05f * Mathf.Sin(Time.time * Mathf.PI);
 		
 		yVec = new Vector3(transform.position.x,
 		                   yInd,
 		                   transform.position.z);
 		
-		transform.position = yVec;
+		transform.position = yVec;*/
+
+		transform.Rotate(rotVec);
 	}
 
 	private bool fadedIn = false;
@@ -112,7 +138,7 @@ public class ConnectableObject:MonoBehaviour
 				alpha = 1.0f;
 				fadedIn = true;
 
-				renderer.material.shader = Shader.Find("Transparent/Cutout/Diffuse");
+				//renderer.material.shader = Shader.Find("Transparent/Cutout/Diffuse");
 			}
 
 			renderer.material.color = new Color(renderer.material.color.r,

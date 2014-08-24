@@ -1,4 +1,16 @@
-﻿using UnityEngine;
+﻿/*
+* |===============================|
+* |								  |
+* |		COPYRIGHT				  |
+* |		TECHBLOGOGY	2014		  |
+* | 							  |
+* |								  |
+* |===============================|
+* 
+* 	WERY BAD CODE. USE ONLY AT YOUR OWN RISK. ALTHOUGHT I'D RECOMEND NOT USING IT
+*/
+
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -10,6 +22,8 @@ public class CameraClick:MonoBehaviour
 	{
 		/*cc = gameObject.AddComponent<CharacterController>(); //Add Character Controller
 		cc.detectCollisions = false;*/
+
+		//aTransparencySortMode = TransparencySortMode.Orthographic;
 	}
 
 	void Update()
@@ -31,12 +45,12 @@ public class CameraClick:MonoBehaviour
 	private float zImp = 0.0f;
 	private void MoveCamera()
 	{
-		if (Input.GetKey(KeyCode.A))
+		if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
 		{
 			transformVector = Vector3.left;
 			camVel = 12.0f;
 		}
-		else if (Input.GetKey(KeyCode.D))
+		else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
 		{
 			transformVector = Vector3.right;
 			camVel = 12.0f;
@@ -46,7 +60,7 @@ public class CameraClick:MonoBehaviour
 			camVel = 0.0f;
 		}
 
-		if (Input.GetKey(KeyCode.W))
+		/*if (Input.GetKey(KeyCode.W))
 		{
 			zImp = 5.0f;
 		}
@@ -63,7 +77,7 @@ public class CameraClick:MonoBehaviour
 		transformDirection = transform.TransformDirection(Vector3.forward);
 		transformDirection *= zImp; 
 		
-		transform.Translate(transformDirection * Time.deltaTime);
+		transform.Translate(transformDirection * Time.deltaTime);*/
 	}
 
 	/* Camera Rotation */
@@ -122,15 +136,23 @@ public class CameraClick:MonoBehaviour
 		}
 		else
 		{
-			if (tempObject != rayObj.GetComponent<ConnectableObject>() && !rayObj.GetComponent<ConnectableObject>().isConnected())
+			if (tempObject != rayObj.GetComponent<ConnectableObject>() && !rayObj.GetComponent<ConnectableObject>().isConnected() && rayObj.GetComponent<ConnectableObject>().cr.res > 0)
 			{
 				tempObject.ConnectTo(rayObj.GetComponent<ConnectableObject>());
 
 				moveTo = rayObj.transform.position;
 				allowMoveAnim = true;
-			}
 
-			tempObject.gameObject.renderer.material.color = new Color(1.0f,1.0f,1.0f,1.0f); //TEMP: Change Selected Material Color
+				tempObject.gameObject.renderer.material.color = new Color(1.0f,0.0f,0.0f,1.0f);
+
+				this.GetComponents<AudioSource>()[1].Play();
+
+			} 
+			else
+			{
+				tempObject.gameObject.renderer.material.color = new Color(1.0f,1.0f,1.0f,1.0f); //TEMP: Change Selected Material Color
+				this.GetComponents<AudioSource>()[2].Play();
+			}
 			
 			tempObject = null;
 			selectedObject = false;
@@ -139,18 +161,20 @@ public class CameraClick:MonoBehaviour
 
 	/* Camera Animation */
 	public static Vector3 moveTo = Vector3.zero;
+	private Vector3 camTo = Vector3.zero;
 	public bool allowMoveAnim = false;
 	private void MoveCameraAnim()
 	{
 		if (allowMoveAnim)
 		{
+			camTo = new Vector3(centerObj.x, centerObj.y+5, centerObj.z-10);
 			centerObj = Vector3.MoveTowards(centerObj, moveTo, Time.deltaTime*10.0f);
-			transform.position = new Vector3(centerObj.x+5,
-			                                 centerObj.y+5,
-			                                 centerObj.z+5);
+			transform.position = Vector3.MoveTowards(transform.position, camTo, Time.deltaTime*10.0f);
+			//transform.position = ;
 			
 			Vector3 dist = moveTo - centerObj;
-			if (dist.normalized == Vector3.zero) allowMoveAnim = false;
+			Vector3 camDist = camTo - transform.position;
+			if (dist.normalized == Vector3.zero && camDist.normalized == Vector3.zero) allowMoveAnim = false;
 		}
 	}
 }
